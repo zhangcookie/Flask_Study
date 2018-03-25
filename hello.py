@@ -4,7 +4,8 @@ from flask import (Flask,
                    redirect,
                    render_template,
                    session,
-                   url_for)
+                   url_for,
+                   flash)
 
 from flask_script import Manager  # flask命令行工具
 from flask_bootstrap import Bootstrap
@@ -31,6 +32,9 @@ def index():
     # print("----------", form)
     if form.validate_on_submit():
         print(form.name)
+        old_name = session.get("name")
+        if old_name is not None and old_name != form.name.data:
+            flash("Looks like you have changed your name!")
         session["name"] = form.name.data  # 将请求的数据存储到用户会话中
         # form.name.data = ""
         return redirect(url_for("index"))  # 使用重定向和url生成函数
