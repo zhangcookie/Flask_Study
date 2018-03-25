@@ -2,7 +2,9 @@ from flask import (Flask,
                    request,
                    make_response,
                    redirect,
-                   render_template)
+                   render_template,
+                   session,
+                   url_for)
 
 from flask_script import Manager  # flask命令行工具
 from flask_bootstrap import Bootstrap
@@ -29,9 +31,10 @@ def index():
     # print("----------", form)
     if form.validate_on_submit():
         print(form.name)
-        name = form.name.data
-        form.name.data = ""
-    return render_template("index.html", form=form, name=name)
+        session["name"] = form.name.data  # 将请求的数据存储到用户会话中
+        # form.name.data = ""
+        return redirect(url_for("index"))  # 使用重定向和url生成函数
+    return render_template("index.html", form=form, name=session.get("name"))
 
 
 # @app.route("/usr/<id>")
